@@ -1,24 +1,17 @@
 #!/bin/sh
-set -e
 
-DATA_DIR="/opt/openlist/data"
+echo "🔧 Fixing permissions for Railway volume..."
 
-echo "===== OpenList Railway Entrypoint ====="
-echo "Current user:"
-id || true
+mkdir -p /opt/openlist/data
 
-echo "Preparing data directory: ${DATA_DIR}"
-mkdir -p "${DATA_DIR}" || true
+if [ "$(id -u)" = "0" ]; then
+    chown -R 1001:1001 /opt/openlist/data
+    chmod -R 755 /opt/openlist/data
+    
+    echo "✅ Permissions fixed for UID 1001"
 
-echo "Before permission fix:"
-ls -ld "${DATA_DIR}" || true
-
-echo "Trying to fix permissions..."
-chmod 755 "${DATA_DIR}" || true
-chmod -R 755 "${DATA_DIR}" || true
-
-echo "After permission fix:"
-ls -ld "${DATA_DIR}" || true
-
-echo "Directory contents:"
-ls
+    exec su-exec 1001:1001 "$@"
+else
+    echo "⚠️ Not running as root, skipping permission fix"
+    exec "$@"
+fi
