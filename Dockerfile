@@ -1,4 +1,4 @@
-FROM openlistteam/openlist
+FROM openlistteam/openlist:latest-aio
 
 # Install su-exec for user switching (if not already present)
 USER root
