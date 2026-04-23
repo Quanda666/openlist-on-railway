@@ -1,17 +1,16 @@
 #!/bin/sh
+set -e
 
-echo "🔧 Fixing permissions for Railway volume..."
+echo "===== OpenList Railway 启动脚本 ====="
+echo "当前用户: "
+id
 
-mkdir -p /opt/openlist/data
+DATA_DIR="/opt/openlist/data"
+mkdir -p "${DATA_DIR}"
 
-if [ "$(id -u)" = "0" ]; then
-    chown -R 1001:1001 /opt/openlist/data
-    chmod -R 755 /opt/openlist/data
-    
-    echo "✅ Permissions fixed for UID 1001"
+echo "修复数据目录权限..."
+chmod -R 755 "${DATA_DIR}" || true
+echo "权限修复完成"
 
-    exec su-exec 1001:1001 "$@"
-else
-    echo "⚠️ Not running as root, skipping permission fix"
-    exec "$@"
-fi
+echo "启动 OpenList..."
+exec "$@"
