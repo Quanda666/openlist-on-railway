@@ -1,4 +1,4 @@
-FROM openlistteam/openlist:latest-aio
+FROM openlistteam/openlist:beta-aio
 
 USER root
 
